@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Counter with Reset</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+        }
+        .counter {
+            font-size: 3rem;
+            color: #333;
+        }
+        .message {
+            font-size: 1.5rem;
+            color: #555;
+        }
+        .reset-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .reset-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="message">Enjoy your masarap na masi from MASI-WRAP!</div>
+        <div class="counter">Current Points: <span id="counter-value"></span></div>
+        <button class="reset-btn" id="reset-button">Reset Counter</button>
+    </div>
+
+    <script>
+        // Retrieve the counter value from localStorage or initialize to 0
+        let counterValue = localStorage.getItem("counter") || 0;
+
+        // Increment the counter value by 10
+        counterValue = parseInt(counterValue) + 10;
+
+        // Update the value in localStorage
+        localStorage.setItem("counter", counterValue);
+
+        // Display the updated counter value on the page
+        document.getElementById("counter-value").textContent = counterValue;
+
+        // Add event listener to the reset button
+        document.getElementById("reset-button").addEventListener("click", function() {
+            // Reset the counter value to 0 in localStorage
+            localStorage.setItem("counter", 0);
+
+            // Update the displayed counter value
+            document.getElementById("counter-value").textContent = 0;
+        });
+    </script>
+</body>
+</html>
