@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Counter with Reset</title>
+    <title>Dynamic Counter with Adjustable Amount</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,30 +38,138 @@
         .reset-btn:hover {
             background-color: #0056b3;
         }
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s;
+        }
+        .modal.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .adjustment {
+            font-size: 2rem;
+            margin: 10px 0;
+            color: #444;
+        }
+        .modal-buttons {
+            margin-top: 20px;
+        }
+        .modal-btn {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .add-btn {
+            background-color: #28a745;
+        }
+        .add-btn:hover {
+            background-color: #218838;
+        }
+        .subtract-btn {
+            background-color: #dc3545;
+        }
+        .subtract-btn:hover {
+            background-color: #c82333;
+        }
+        .confirm-btn {
+            background-color: #007BFF;
+        }
+        .confirm-btn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="message">Enjoy your masarap na masi from MASI-WRAP!</div>
-        <div class="counter">Current Points: <span id="counter-value"></span></div>
+        <div class="message">The page has been loaded!</div>
+        <div class="counter">Counter Value: <span id="counter-value"></span></div>
         <button class="reset-btn" id="reset-button">Reset Counter</button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <p>Adjust the points you want to add or subtract:</p>
+            <div class="adjustment" id="adjustment-display">0</div>
+            <div class="modal-buttons">
+                <button class="modal-btn add-btn" id="add-btn">+10</button>
+                <button class="modal-btn subtract-btn" id="subtract-btn">-10</button>
+                <button class="modal-btn confirm-btn" id="confirm-btn">Confirm</button>
+            </div>
+        </div>
     </div>
 
     <script>
         // Retrieve the counter value from localStorage or initialize to 0
         let counterValue = localStorage.getItem("counter") || 0;
+        counterValue = parseInt(counterValue);
 
-        // Increment the counter value by 10
-        counterValue = parseInt(counterValue) + 10;
-
-        // Update the value in localStorage
-        localStorage.setItem("counter", counterValue);
-
-        // Display the updated counter value on the page
+        // Display the current counter value on the page
         document.getElementById("counter-value").textContent = counterValue;
 
+        // Initialize the adjustment value
+        let adjustment = 0;
+
+        // Show the modal
+        const modal = document.getElementById("modal");
+        modal.classList.add("show");
+
+        // Update the adjustment display
+        const adjustmentDisplay = document.getElementById("adjustment-display");
+        function updateAdjustmentDisplay() {
+            adjustmentDisplay.textContent = adjustment > 0 ? `+${adjustment}` : adjustment;
+        }
+
+        // Add event listeners for the "+10" and "-10" buttons
+        document.getElementById("add-btn").addEventListener("click", () => {
+            adjustment += 10;
+            updateAdjustmentDisplay();
+        });
+
+        document.getElementById("subtract-btn").addEventListener("click", () => {
+            adjustment -= 10;
+            updateAdjustmentDisplay();
+        });
+
+        // Confirm the adjustment
+        document.getElementById("confirm-btn").addEventListener("click", () => {
+            // Confirm the final adjustment with the user
+            const userConfirmed = confirm(`The counter will be adjusted by ${adjustment}. Is this correct?`);
+            if (userConfirmed) {
+                // Update the counter value and localStorage
+                counterValue += adjustment;
+                localStorage.setItem("counter", counterValue);
+                document.getElementById("counter-value").textContent = counterValue;
+            }
+
+            // Hide the modal
+            modal.classList.remove("show");
+        });
+
         // Add event listener to the reset button
-        document.getElementById("reset-button").addEventListener("click", function() {
+        document.getElementById("reset-button").addEventListener("click", function () {
             // Reset the counter value to 0 in localStorage
             localStorage.setItem("counter", 0);
 
